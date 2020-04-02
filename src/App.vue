@@ -17,6 +17,7 @@
     </v-app-bar>
 
     <ProjectLoader v-if="project === null" />
+    <ProjectExplorer v-else />
 
     <v-dialog v-model="infoDialog" width="500">
       <v-card>
@@ -55,11 +56,13 @@
 
 <script>
 import ProjectLoader from './components/ProjectLoader.vue';
+import ProjectExplorer from './components/ProjectExplorer.vue';
 
 export default {
   name: 'App',
   components: {
     ProjectLoader,
+    ProjectExplorer,
   },
   data: () => ({
     infoDialog: false,
