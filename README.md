@@ -1,4 +1,6 @@
-# scenario-analysis-app
+# Scenario analysis app
+
+This repository contains a small app for scenario analysis I made as a university project.
 
 ## Project setup
 ```
