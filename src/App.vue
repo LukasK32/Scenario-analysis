@@ -1,60 +1,82 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-app-bar app clipped-left color="primary">
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+      <v-toolbar-title>Metoda scenariuszowa</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn icon @click="darkMode = !darkMode">
+        <v-icon>mdi-brightness-6</v-icon>
       </v-btn>
+
+      <v-btn icon @click="infoDialog = true">
+        <v-icon>mdi-information-outline </v-icon>
+      </v-btn>
+
     </v-app-bar>
 
-    <v-content>
-      <HelloWorld/>
-    </v-content>
+    <v-dialog v-model="infoDialog" width="500">
+      <v-card>
+        <v-card-title
+          class="headline primary"
+          primary-title
+        >
+          Informacje
+        </v-card-title>
+
+        <v-card-text style="padding: 10px 15px;">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          utlabore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="infoDialog = false"
+          >
+            Ok!
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-
 export default {
   name: 'App',
-
-  components: {
-    HelloWorld,
-  },
-
   data: () => ({
-    //
+    infoDialog: false,
+    darkMode: false,
   }),
+  watch: {
+    darkMode() {
+      this.$vuetify.theme.dark = this.darkMode;
+    },
+  },
 };
 </script>
+
+<style lang="scss">
+html,
+body {
+  overflow-y: auto !important;
+}
+
+.v-app-bar .v-tab.v-tab--active {
+  color: rgba(0, 0, 0, 0.87);
+
+  .theme--dark & {
+    color: #fff;
+  }
+}
+</style>
