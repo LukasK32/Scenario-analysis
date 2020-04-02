@@ -1,6 +1,9 @@
 <template>
   <v-content>
     <v-container class="main-container">
+      <v-row justify="end">
+        <ProjectSaver />
+      </v-row>
       <v-row>
         <ProjectNameField />
       </v-row>
@@ -10,10 +13,12 @@
 
 <script>
 import ProjectNameField from './ProjectNameField.vue';
+import ProjectSaver from './ProjectSaver.vue';
 
 export default {
   components: {
     ProjectNameField,
+    ProjectSaver,
   },
 };
 </script>
