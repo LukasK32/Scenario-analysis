@@ -16,6 +16,8 @@
 
     </v-app-bar>
 
+    <ProjectLoader v-if="project === null" />
+
     <v-dialog v-model="infoDialog" width="500">
       <v-card>
         <v-card-title
@@ -52,12 +54,22 @@
 </template>
 
 <script>
+import ProjectLoader from './components/ProjectLoader.vue';
+
 export default {
   name: 'App',
+  components: {
+    ProjectLoader,
+  },
   data: () => ({
     infoDialog: false,
     darkMode: false,
   }),
+  computed: {
+    project() {
+      return this.$store.state.project;
+    },
+  },
   watch: {
     darkMode() {
       this.$vuetify.theme.dark = this.darkMode;
