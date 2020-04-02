@@ -15,6 +15,12 @@ export default new Vuex.Store({
     overwriteProject(state, project = cleanProject) {
       state.project = project;
     },
+    updateProjectName(state, name) {
+      // trim() results in weird behaviour in v-text-field
+      // state.project.name = name.trim();
+
+      state.project.name = name;
+    },
   },
   actions: {
     async createProject() {
