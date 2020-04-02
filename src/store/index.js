@@ -5,6 +5,11 @@ Vue.use(Vuex);
 
 const cleanProject = {
   name: 'Bez tytułu',
+  domains: [
+    {
+      name: 'Ekonomiczna',
+    },
+  ],
 };
 
 export default new Vuex.Store({
@@ -21,13 +26,47 @@ export default new Vuex.Store({
 
       state.project.name = name;
     },
+    addDomain(state, name) {
+      state.project.domains.push({
+        name,
+      });
+    },
+    editDomain(state, { oldName, newName }) {
+      state.project.domains = state.project.domains.map(
+        (domain) => ({
+          ...domain,
+          name: domain.name === oldName ? newName.trim() : domain.name,
+        }),
+      );
+    },
+    removeDomain(state, name) {
+      state.project.domains = state.project.domains.filter((domain) => domain.name !== name);
+    },
   },
   actions: {
-    async createProject() {
-      await this.commit('overwriteProject');
+    async createProject({ commit }) {
+      await commit('overwriteProject');
     },
-    async loadProject() {
-      throw new Error('Nie udało się odczytać pliku!');
+    async addDomain({ commit, state }, newDomainName) {
+      if (state.project.domains.filter(
+        ({ name }) => name.toLowerCase() === newDomainName.toLowerCase(),
+      ).length > 0) {
+        throw new Error('Nazwy sfer muszą być unikalne!');
+      }
+
+      await commit('addDomain', newDomainName);
+    },
+    async editDomain({ commit, state }, { oldName, newName }) {
+      if (state.project.domains.filter(
+        ({ name }) => name.toLowerCase() === newName.toLowerCase(),
+      ).length > 0) {
+        throw new Error('Nazwy sfer muszą być unikalne!');
+      }
+
+      await commit('editDomain', {
+        oldName,
+        newName,
+      });
     },
   },
   modules: {
