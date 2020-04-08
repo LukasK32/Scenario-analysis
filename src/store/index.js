@@ -8,6 +8,12 @@ const cleanProject = {
   domains: [
     {
       name: 'Ekonomiczna',
+      factors: [
+        {
+          name: 'poziom PKB per capita',
+          influence: 3,
+        },
+      ],
     },
   ],
 };

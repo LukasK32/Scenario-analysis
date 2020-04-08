@@ -24,6 +24,36 @@
           </v-col>
 
         </v-row>
+        <v-row>
+          <v-container>
+            <v-card
+              class="mx-auto"
+              :elevation="3"
+              v-for="factor in domain.factors"
+              :key="`${domain.name}:${factor.name}`"
+              style="margin-bottom: 0.5em;"
+            >
+
+              <v-container style="padding: 0.25em 2em;">
+                <v-row justify="space-between">
+                  <v-col cols="auto" class="pl-0">
+                    <h4>{{ factor.name }}</h4>
+                  </v-col>
+                  <v-col cols="auto" class="pl-0">
+                    <h4>{{ factor.influence }}</h4>
+                  </v-col>
+                  <v-col cols="auto" class="pl-0">
+                    <v-btn color="secondary" class="mr-2" @click="editDomain(domain.name)">
+                      Edytuj
+                    </v-btn>
+                    <v-btn color="error" @click="removeDomain(domain.name)">Usuń</v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+
+            </v-card>
+          </v-container>
+        </v-row>
       </v-container>
     </v-card>
   </v-container>
