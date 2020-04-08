@@ -71,4 +71,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+
+.container {
+  max-width: 960px;
+}
 </style>

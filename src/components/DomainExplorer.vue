@@ -1,62 +1,61 @@
 <template>
-  <v-container>
-    <v-row justify="end" class="mb-4">
-      <v-btn color="primary" class="mr-2" @click="addDomain">Dodaj sferę</v-btn>
-    </v-row>
+  <div class="container">
+    <div class="buttons is-right">
+      <button class="button is-success" @click="addDomain">Dodaj sferę</button>
+    </div>
 
-    <v-card
-      class="mx-auto"
-      :elevation="3"
-      v-for="domain in domains"
-      :key="domain.name"
-      style="margin-bottom: 1em;"
-    >
-      <v-container style="padding: 1em 2em;">
-        <v-row justify="space-between">
+    <div class="card" v-for="domain in domains" :key="domain.name">
+      <div class="card-content">
+        <div class="media columns is-vcentered">
+          <div class="column">
+            <p class="title is-4">{{ domain.name }}</p>
+          </div>
+          <div class="column buttons has-text-right">
+            <button class="button is-success" @click="() => {}">Dodaj czynnik</button>
+            <button class="button is-info" @click="editDomain(domain.name)">Edytuj</button>
+            <button class="button is-danger" @click="removeDomain(domain.name)">Usuń</button>
+          </div>
+        </div>
 
-          <v-col cols="auto" class="pl-0">
-            <h2>{{ domain.name }}</h2>
-          </v-col>
+        <div class="content">
 
-          <v-col cols="auto" class="pl-0">
-            <v-btn color="secondary" class="mr-2" @click="editDomain(domain.name)">Edytuj</v-btn>
-            <v-btn color="error" @click="removeDomain(domain.name)">Usuń</v-btn>
-          </v-col>
+          <div
+            class="card"
+            v-for="factor in domain.factors"
+            :key="`${domain.name}:${factor.name}`"
+          >
+            <div class="card-content">
+            <div class="media columns is-vcentered">
+              <div class="column">
+                <p class="title is-4">{{ factor.name }}</p>
+              </div>
+              <div class="column has-text-centered">
+                {{ factor.influence }}
+              </div>
+              <div class="column buttons has-text-right">
 
-        </v-row>
-        <v-row>
-          <v-container>
-            <v-card
-              class="mx-auto"
-              :elevation="3"
-              v-for="factor in domain.factors"
-              :key="`${domain.name}:${factor.name}`"
-              style="margin-bottom: 0.5em;"
-            >
+                <button
+                  class="button is-info is-small is-outlined"
+                  @click="() => {}"
+                >
+                  Edytuj
+                </button>
+                <button
+                  class="button is-danger is-small is-outlined"
+                  @click="() => {}"
+                >
+                  Usuń
+                </button>
 
-              <v-container style="padding: 0.25em 2em;">
-                <v-row justify="space-between">
-                  <v-col cols="auto" class="pl-0">
-                    <h4>{{ factor.name }}</h4>
-                  </v-col>
-                  <v-col cols="auto" class="pl-0">
-                    <h4>{{ factor.influence }}</h4>
-                  </v-col>
-                  <v-col cols="auto" class="pl-0">
-                    <v-btn color="secondary" class="mr-2" @click="editDomain(domain.name)">
-                      Edytuj
-                    </v-btn>
-                    <v-btn color="error" @click="removeDomain(domain.name)">Usuń</v-btn>
-                  </v-col>
-                </v-row>
-              </v-container>
+              </div>
+            </div>
+          </div>
+          </div>
 
-            </v-card>
-          </v-container>
-        </v-row>
-      </v-container>
-    </v-card>
-  </v-container>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -68,34 +67,71 @@ export default {
   },
   methods: {
     async addDomain() {
-      const name = prompt('Podaj nazwę dla nowej sfery:');
+      this.$buefy.dialog.prompt({
+        message: 'Podaj nazwę dla nowej sfery:',
+        inputAttrs: {
+          placeholder: 'np. Ekonomiczna',
+          maxlength: 50,
+        },
+        cancelText: 'Anuluj',
+        confirmText: 'Dodaj',
+        trapFocus: true,
+        onConfirm: async (name) => {
+          if (name === null) return;
 
-      if (name === null) return;
-
-      try {
-        await this.$store.dispatch('addDomain', name.trim());
-      } catch (e) {
-        this.$emit('failed', e.message);
-      }
+          try {
+            await this.$store.dispatch('addDomain', name.trim());
+          } catch (e) {
+            this.displayError(e.message);
+          }
+        },
+      });
     },
     async editDomain(oldName) {
-      const newName = prompt(`Podaj nową nazwę dla sfery '${oldName}':`, oldName);
+      this.$buefy.dialog.prompt({
+        message: `Podaj nową nazwę dla sfery <strong>${oldName}</strong>:`,
+        inputAttrs: {
+          placeholder: 'np. Ekonomiczna',
+          maxlength: 50,
+          value: oldName,
+        },
+        cancelText: 'Anuluj',
+        confirmText: 'Dodaj',
+        trapFocus: true,
+        onConfirm: async (newName) => {
+          if (newName === null || oldName === newName) return;
 
-      if (newName === null || oldName === newName) return;
-
-      try {
-        await this.$store.dispatch('editDomain', {
-          oldName,
-          newName,
-        });
-      } catch (e) {
-        this.$emit('failed', e.message);
-      }
+          try {
+            await this.$store.dispatch('editDomain', {
+              oldName,
+              newName,
+            });
+          } catch (e) {
+            this.displayError(e.message);
+          }
+        },
+      });
     },
     async removeDomain(name) {
-      if (!window.confirm(`Czy napewno chcesz usunąć sferę '${name}'?`)) return;
-
-      await this.$store.commit('removeDomain', name);
+      this.$buefy.dialog.confirm({
+        message: `Czy napewno chcesz usunąć sferę <strong>${name}</strong>?`,
+        cancelText: 'Anuluj',
+        confirmText: 'Usuń',
+        type: 'is-danger',
+        onConfirm: async () => {
+          await this.$store.commit('removeDomain', name);
+        },
+      });
+    },
+    displayError(msg) {
+      this.$buefy.snackbar.open({
+        duration: 6000,
+        message: msg,
+        type: 'is-danger',
+        position: 'is-bottom-left',
+        actionText: 'Ok',
+        queue: false,
+      });
     },
   },
 };

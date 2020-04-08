@@ -1,5 +1,11 @@
 <template>
-  <v-btn color="secondary" @click="saveProject">Zapisz</v-btn>
+  <div class="container">
+    <div class="buttons is-right">
+      <button class="button is-dark" @click="saveProject">
+        Zapisz projekt
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>

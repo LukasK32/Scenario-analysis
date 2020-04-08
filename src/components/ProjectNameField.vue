@@ -1,5 +1,9 @@
 <template>
-  <v-text-field v-model="name" label="Nazwa" required />
+  <div class="container" style="margin-bottom: 1em;">
+    <b-field label="Nazwa projektu">
+      <b-input v-model="name" label="Nazwa" />
+    </b-field>
+  </div>
 </template>
 
 <script>

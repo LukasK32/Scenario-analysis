@@ -1,22 +1,9 @@
 <template>
-  <v-content>
-    <v-container class="main-container">
-      <v-row justify="end">
-        <ProjectSaver />
-      </v-row>
-      <v-row>
-        <ProjectNameField />
-      </v-row>
-      <v-row>
-        <DomainExplorer @failed="handleError" />
-      </v-row>
-    </v-container>
-
-    <v-snackbar v-model="error" bottom color="error" :timeout="6000">
-      {{ error_msg }}
-      <v-btn dark text @click="error = false">Zamknij</v-btn>
-    </v-snackbar>
-  </v-content>
+  <section class="section">
+    <ProjectSaver />
+    <ProjectNameField />
+    <DomainExplorer />
+  </section>
 </template>
 
 <script>
@@ -29,20 +16,6 @@ export default {
     ProjectNameField,
     ProjectSaver,
     DomainExplorer,
-  },
-  data: () => ({
-    error: false,
-    error_msg: '...',
-  }),
-  methods: {
-    handleError(err) {
-      this.error = false;
-
-      setTimeout(() => {
-        this.error_msg = err;
-        this.error = true;
-      }, 0);
-    },
   },
 };
 </script>
