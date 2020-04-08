@@ -1,57 +1,38 @@
 <template>
-  <v-app>
-    <v-app-bar app clipped-left color="primary">
+  <section>
+    <b-navbar fixed-top type="is-dark">
+      <template slot="brand">
+        <b-navbar-item tag="div">Metoda scenariuszowa</b-navbar-item>
+      </template>
 
-      <v-toolbar-title>Metoda scenariuszowa</v-toolbar-title>
+      <template slot="end">
+        <b-navbar-item @click="infoDialog = true">
+          <i class="material-icons-outlined">info</i>
+        </b-navbar-item>
+      </template>
+    </b-navbar>
 
-      <v-spacer></v-spacer>
-
-      <v-btn icon @click="darkMode = !darkMode">
-        <v-icon>mdi-brightness-6</v-icon>
-      </v-btn>
-
-      <v-btn icon @click="infoDialog = true">
-        <v-icon>mdi-information-outline </v-icon>
-      </v-btn>
-
-    </v-app-bar>
-
-    <ProjectLoader v-if="project === null" />
-    <ProjectExplorer v-else />
-
-    <v-dialog v-model="infoDialog" width="500">
-      <v-card>
-        <v-card-title
-          class="headline primary"
-          primary-title
-        >
-          Informacje
-        </v-card-title>
-
-        <v-card-text style="padding: 10px 15px;">
+    <b-modal :active.sync="infoDialog" :width="500" scroll="keep">
+      <div class="card">
+        <div class="card-content">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           utlabore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
           ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
           sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
           est laborum.
-        </v-card-text>
 
-        <v-divider></v-divider>
+          <div class="has-text-right">
+            <button class="button is-success" @click="infoDialog = false">Ok!</button>
+          </div>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="infoDialog = false"
-          >
-            Ok!
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-app>
+        </div>
+      </div>
+    </b-modal>
+
+    <ProjectLoader v-if="project === null" />
+    <ProjectExplorer v-else />
+  </section>
 </template>
 
 <script>
@@ -66,16 +47,10 @@ export default {
   },
   data: () => ({
     infoDialog: false,
-    darkMode: false,
   }),
   computed: {
     project() {
       return this.$store.state.project;
-    },
-  },
-  watch: {
-    darkMode() {
-      this.$vuetify.theme.dark = this.darkMode;
     },
   },
 };
@@ -84,14 +59,16 @@ export default {
 <style lang="scss">
 html,
 body {
-  overflow-y: auto !important;
+  overflow-y: auto;
 }
 
-.v-app-bar .v-tab.v-tab--active {
-  color: rgba(0, 0, 0, 0.87);
-
-  .theme--dark & {
-    color: #fff;
-  }
+body {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 16px;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 </style>
