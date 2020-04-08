@@ -1,54 +1,63 @@
 <template>
-  <v-content>
-    <v-container class="fill-height" fluid>
-      <v-row align="center" justify="center">
+  <section class="hero is-light is-bold is-fullheight-with-navbar">
+    <div class="hero-body">
+      <div class="container">
+        <div class="buttons is-centered">
 
-        <v-btn large color="primary" class="ma-2" @click="createProject()">Nowy projekt</v-btn>
-        <v-btn large color="secondary" class="ma-2" @click="initProjectLoading()">
-          Wczytaj projekt
-        </v-btn>
+          <button class="button is-success is-medium" @click="createProject()">
+            Nowy projekt
+          </button>
 
-      </v-row>
-    </v-container>
+          <button class="button is-info is-medium" @click="initProjectLoading()">
+            Wczytaj projekt
+          </button>
 
+        </div>
+      </div>
+    </div>
     <input
-      type="file"
-      ref="fileInput"
-      accept=".json"
-      multiple="false"
-      style="display:none"
-      @change="loadProject"
-    />
-
-    <v-snackbar v-model="error" bottom color="error" :timeout="6000">
-      {{ error_msg }}
-      <v-btn dark text @click="error = false">Zamknij</v-btn>
-    </v-snackbar>
-  </v-content>
+        type="file"
+        ref="fileInput"
+        accept=".json"
+        multiple="false"
+        style="display:none"
+        @change="loadProject"
+      />
+      <b-loading :is-full-page="true" :active.sync="isLoading" />
+  </section>
 </template>
 
 <script>
 export default {
   data: () => ({
-    error: false,
-    error_msg: '...',
+    isLoading: false,
   }),
   methods: {
     async createProject() {
-      this.error = false;
+      if (this.isLoading) { return; }
+      this.isLoading = true;
 
       try {
         await this.$store.dispatch('createProject');
       } catch (e) {
-        this.error = true;
-        this.error_msg = e;
+        this.isLoading = false;
+        this.$buefy.snackbar.open({
+          duration: 6000,
+          message: e.message,
+          type: 'is-danger',
+          position: 'is-bottom-left',
+          actionText: 'Ok',
+          queue: false,
+        });
       }
     },
     initProjectLoading() {
+      if (this.isLoading) { return; }
+
       this.$refs.fileInput.click();
     },
     async loadProject(event) {
-      this.error = false;
+      this.isLoading = true;
 
       try {
         if (event.target.files.length !== 1) throw new Error('Nie wybrano pliku');
@@ -61,19 +70,27 @@ export default {
 
         try {
           parsedProject = await file.text();
+          const project = JSON.parse(parsedProject);
+
+          // 'project' object should be checked here...
+
+          await this.$store.commit('overwriteProject', project);
         } catch (err) {
           throw new Error('Nie udało się odczytać danych z pliku');
         }
-
-        const project = JSON.parse(parsedProject);
-
-        // 'project' object should be checked here...
-
-        await this.$store.commit('overwriteProject', project);
       } catch (e) {
-        this.error = true;
-        this.error_msg = e.message;
+        this.isLoading = false;
+        this.$buefy.snackbar.open({
+          duration: 6000,
+          message: e.message,
+          type: 'is-danger',
+          position: 'is-bottom-left',
+          actionText: 'Ok',
+          queue: false,
+        });
       }
+
+      event.target.value = ''; // eslint-disable-line no-param-reassign
     },
   },
 };
