@@ -35,6 +35,7 @@ export default new Vuex.Store({
     addDomain(state, name) {
       state.project.domains.push({
         name,
+        factors: [],
       });
     },
     editDomain(state, { oldName, newName }) {
@@ -47,6 +48,29 @@ export default new Vuex.Store({
     },
     removeDomain(state, name) {
       state.project.domains = state.project.domains.filter((domain) => domain.name !== name);
+    },
+    removeFactor(state, { domainName, factorName }) {
+      // console.log(domainName, factorName);
+      for (let i = 0; i < state.project.domains.length; i += 1) {
+        if (state.project.domains[i].name === domainName) {
+          state.project.domains[i].factors = state.project.domains[i].factors.filter(
+            (factor) => factor.name !== factorName,
+          );
+
+          return;
+        }
+      }
+    },
+    storeFactor(state, { domainName, factor }) {
+      state.project.domains = state.project.domains.map((domain) => {
+        if (domain.name === domainName) {
+          const d = domain;
+          d.factors.push(factor);
+          return d;
+        }
+
+        return domain;
+      });
     },
   },
   actions: {
@@ -72,6 +96,18 @@ export default new Vuex.Store({
       await commit('editDomain', {
         oldName,
         newName,
+      });
+    },
+    async storeFactor({ commit, state }, { domainName, factor }) {
+      state.project.domains.forEach((d) => {
+        d.factors.forEach((f) => {
+          if (f.name === factor.name) throw new Error('Nazwy czynników muszą być unikalne!');
+        });
+      });
+
+      await commit('storeFactor', {
+        domainName,
+        factor,
       });
     },
   },
