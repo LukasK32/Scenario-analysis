@@ -4,43 +4,12 @@
       <button class="button is-success" @click="addDomain">Dodaj sferę</button>
     </div>
 
-    <div class="card" v-for="domain in domains" :key="domain.name">
-      <div class="card-content">
-        <div class="media columns is-vcentered">
-          <div class="column">
-            <p class="title is-4">{{ domain.name }}</p>
-          </div>
-          <div class="column buttons has-text-right">
-            <button class="button is-success" @click="addFactor(domain.name)">Dodaj czynnik</button>
-            <button class="button is-info" @click="editDomain(domain.name)">Edytuj</button>
-            <button class="button is-danger" @click="removeDomain(domain.name)">Usuń</button>
-          </div>
-        </div>
-
-        <div class="content">
-          <div class="card" v-for="factor in domain.factors" :key="`${domain.name}:${factor.name}`">
-            <div class="card-content">
-              <div class="media columns is-vcentered">
-                <div class="column">
-                  <p class="title is-4">{{ factor.name }}</p>
-                </div>
-                <div class="column has-text-centered">{{ factor.influence }}</div>
-                <div class="column buttons has-text-right">
-                  <button class="button is-info is-small is-outlined"
-                    @click="editFactor(domain.name, factor)">
-                    Edytuj
-                  </button>
-                  <button
-                    class="button is-danger is-small is-outlined"
-                    @click="removeFactor(domain.name, factor.name)"
-                  >Usuń</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <template v-for="domainID in Object.keys(domains)">
+      <Domain
+        :key="`domain-${domainID}`"
+        :ID="domainID"
+      />
+    </template>
 
     <b-modal :active.sync="isFactorModalActive" scroll="clip" trap-focus>
       <div class="card" style="max-width: 450px; margin: 10px auto;">
@@ -64,7 +33,7 @@
                 Anuluj
               </button>
               <button class="button is-success"
-                @click="() => {stroreFactor(); isFactorModalActive = false}">
+                @click="() => {storeFactor(); isFactorModalActive = false}">
                 {{ isEditingFactor ? `Zapisz` : 'Dodaj' }}
               </button>
             </p>
@@ -76,7 +45,12 @@
 </template>
 
 <script>
+import Domain from './Domain.vue';
+
 export default {
+  components: {
+    Domain,
+  },
   data: () => ({
     isFactorModalActive: false,
     isEditingFactor: false,
@@ -89,7 +63,7 @@ export default {
   }),
   computed: {
     domains() {
-      return this.$store.state.project.domains;
+      return this.$store.state.domains;
     },
   },
   methods: {
@@ -106,102 +80,10 @@ export default {
         onConfirm: async (name) => {
           if (name === null) return;
 
-          try {
-            await this.$store.dispatch('addDomain', name.trim());
-          } catch (e) {
-            this.displayError(e.message);
-          }
+          this.$store.commit('storeDomain', {
+            name: name.trim(),
+          });
         },
-      });
-    },
-    async editDomain(oldName) {
-      this.$buefy.dialog.prompt({
-        message: `Podaj nową nazwę dla sfery <strong>${oldName}</strong>:`,
-        inputAttrs: {
-          placeholder: 'np. Ekonomiczna',
-          maxlength: 50,
-          value: oldName,
-        },
-        cancelText: 'Anuluj',
-        confirmText: 'Zapisz',
-        trapFocus: true,
-        onConfirm: async (newName) => {
-          if (newName === null || oldName === newName) return;
-
-          try {
-            await this.$store.dispatch('editDomain', {
-              oldName,
-              newName,
-            });
-          } catch (e) {
-            this.displayError(e.message);
-          }
-        },
-      });
-    },
-
-    async removeDomain(name) {
-      this.$buefy.dialog.confirm({
-        message: `Czy napewno chcesz usunąć sferę <strong>${name}</strong>?`,
-        cancelText: 'Anuluj',
-        confirmText: 'Usuń',
-        type: 'is-danger',
-        onConfirm: async () => {
-          await this.$store.commit('removeDomain', name);
-        },
-      });
-    },
-
-    async addFactor(domainName) {
-      this.factorDomain = domainName;
-      this.isEditingFactor = false;
-      this.newFactor = {
-        name: '',
-        influence: 0,
-      };
-      this.isFactorModalActive = true;
-    },
-
-    async stroreFactor() {
-      try {
-        await this.$store.dispatch('storeFactor', {
-          domainName: this.factorDomain,
-          factor: this.newFactor,
-        });
-      } catch (e) {
-        this.displayError(e.message);
-      }
-    },
-
-    async editFactor(domainName, factor) {
-      this.factorDomain = domainName;
-      this.isEditingFactor = true;
-      this.oldFactorName = factor.name;
-      this.newFactor = {
-        ...factor,
-      };
-      this.isFactorModalActive = true;
-    },
-
-    async removeFactor(domainName, factorName) {
-      await this.$buefy.dialog.confirm({
-        message: `Czy napewno chcesz usunąć czynnik <strong>${factorName}</strong>?`,
-        cancelText: 'Anuluj',
-        confirmText: 'Usuń',
-        type: 'is-danger',
-        onConfirm: async () => {
-          await this.$store.commit('removeFactor', { domainName, factorName });
-        },
-      });
-    },
-    displayError(msg) {
-      this.$buefy.snackbar.open({
-        duration: 6000,
-        message: msg,
-        type: 'is-danger',
-        position: 'is-bottom-left',
-        actionText: 'Ok',
-        queue: false,
       });
     },
   },

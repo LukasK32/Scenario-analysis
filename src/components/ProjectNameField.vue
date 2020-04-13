@@ -13,13 +13,12 @@ export default {
   computed: {
     name: {
       get() {
-        return this.$store.state.project.name;
+        return this.$store.state.name;
       },
       // This is probably a little overkill but I wanted to check if it
       // works this way ;)
       set: throttle(function setProjectName(value) {
         this.$store.commit('updateProjectName', value);
-        console.log('Yup!');
       }, 250),
     },
   },

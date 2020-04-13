@@ -30,8 +30,8 @@
       </div>
     </b-modal>
 
-    <ProjectLoader v-if="project === null" />
-    <ProjectExplorer v-else />
+    <ProjectExplorer v-if="loaded" />
+    <ProjectLoader v-else />
   </section>
 </template>
 
@@ -51,6 +51,9 @@ export default {
   computed: {
     project() {
       return this.$store.state.project;
+    },
+    loaded() {
+      return this.$store.state.loaded;
     },
   },
 };

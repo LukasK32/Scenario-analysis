@@ -14,7 +14,10 @@ const slugify = require('slugify');
 export default {
   methods: {
     saveProject() {
-      const project = { ...this.$store.state.project };
+      const project = {
+        ...this.$store.state,
+      };
+
       const parsedProject = JSON.stringify(project);
 
       const file = new Blob([parsedProject], {

@@ -37,19 +37,7 @@ export default {
       if (this.isLoading) { return; }
       this.isLoading = true;
 
-      try {
-        await this.$store.dispatch('createProject');
-      } catch (e) {
-        this.isLoading = false;
-        this.$buefy.snackbar.open({
-          duration: 6000,
-          message: e.message,
-          type: 'is-danger',
-          position: 'is-bottom-left',
-          actionText: 'Ok',
-          queue: false,
-        });
-      }
+      this.$store.commit('loadProject');
     },
     initProjectLoading() {
       if (this.isLoading) { return; }
@@ -74,7 +62,7 @@ export default {
 
           // 'project' object should be checked here...
 
-          await this.$store.commit('overwriteProject', project);
+          await this.$store.commit('loadProject', project);
         } catch (err) {
           throw new Error('Nie udało się odczytać danych z pliku');
         }
