@@ -15,16 +15,35 @@
     <b-modal :active.sync="infoDialog" :width="500" scroll="keep">
       <div class="card">
         <div class="card-content">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          utlabore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
+          <h4 class="title is-4">
+            Metoda scenariuszowa
+          </h4>
 
-          <div class="has-text-right">
-            <button class="button is-success" @click="infoDialog = false">Ok!</button>
+          <p class="content">
+            Aplikacja do przeprowadzania analizy otoczenia metodą scenariuszową.
+          </p>
+
+          <h4 class="title is-5">
+            Autor
+          </h4>
+
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://github.com/LukasK32.png?size=96" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-5">Łukasz Kirylak</p>
+              <p class="subtitle is-6">
+                GitHub: <a href="https://github.com/LukasK32" target="_blank">LukasK32</a>
+              </p>
+            </div>
           </div>
+
+          <p class="buttons is-right">
+            <button class="button is-info" @click="infoDialog = false">Ok</button>
+          </p>
 
         </div>
       </div>
