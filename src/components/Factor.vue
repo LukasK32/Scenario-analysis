@@ -3,22 +3,18 @@
     <div class="card-content">
       <div class="media columns is-vcentered">
 
-        <div class="column is-3">
-          <p class="title is-6">{{ factor.name }}</p>
+        <div class="column">
+          <p class="title is-5">
+            {{ factor.name }}
+            <small class="is-block is-size-6">Sfera: {{ domain }}</small>
+          </p>
         </div>
 
-        <div class="column is-3 has-text-centered">
-          {{ changeName }}
-        </div>
-        <div class="column is-3 has-text-centered">
-          {{ factor.influence }}
-        </div>
-
-        <div class="column is-3 buttons has-text-right">
-          <button class="button is-info is-small is-outlined" @click="isFactorModalActive = true">
+        <div class="column buttons has-text-right">
+          <button class="button is-info" @click="isFactorModalActive = true">
             Edytuj
           </button>
-          <button class="button is-danger is-small is-outlined" @click="destroy">Usuń</button>
+          <button class="button is-danger" @click="destroy">Usuń</button>
         </div>
 
       </div>
@@ -55,6 +51,15 @@ export default {
       if (this.ID in factors) return factors[this.ID];
 
       return null;
+    },
+    domain() {
+      const { domains } = this.$store.state;
+
+      if (this.factor.domain in domains) {
+        return domains[this.factor.domain].name;
+      }
+
+      return 'N/A';
     },
     changeName() {
       switch (this.factor.change) {

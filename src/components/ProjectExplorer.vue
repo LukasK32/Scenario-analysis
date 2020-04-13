@@ -2,21 +2,46 @@
   <section class="section">
     <ProjectSaver />
     <ProjectNameField />
-    <DomainExplorer />
+
+    <section class="container">
+      <b-tabs type="is-boxed" v-model="activeTab" :animated="false">
+        <b-tab-item label="Scenariusze">
+          <ScenarioEditor />
+        </b-tab-item>
+        <b-tab-item label="Sfery">
+          <DomainEditor />
+        </b-tab-item>
+        <b-tab-item label="Czynniki">
+          <FactorEditor />
+        </b-tab-item>
+        <b-tab-item label="Podsumowanie">
+          <Summary />
+        </b-tab-item>
+      </b-tabs>
+    </section>
   </section>
 </template>
 
 <script>
 import ProjectNameField from './ProjectNameField.vue';
 import ProjectSaver from './ProjectSaver.vue';
-import DomainExplorer from './DomainExplorer.vue';
+import ScenarioEditor from './ScenarioEditor.vue';
+import DomainEditor from './DomainEditor.vue';
+import FactorEditor from './FactorEditor.vue';
+import Summary from './Summary.vue';
 
 export default {
   components: {
     ProjectNameField,
     ProjectSaver,
-    DomainExplorer,
+    ScenarioEditor,
+    DomainEditor,
+    FactorEditor,
+    Summary,
   },
+  data: () => ({
+    activeTab: 0,
+  }),
 };
 </script>
 

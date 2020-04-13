@@ -5,43 +5,70 @@
         <div class="content">
           <h4 class="title is-4">
             {{ domainName ? 'Dodaj czynnik' : 'Edytuj czynnik' }}
-            <small class="is-size-6 is-block" v-if="domainName">Strefa: {{ domainName }}</small>
+            <small
+              class="is-size-6 is-block"
+              v-if="domainName"
+            >Strefa: {{ domainName }}</small>
           </h4>
           <p>
             <b-field label="Nazwa">
               <b-input type="text" v-model="factorData.name" />
             </b-field>
 
-            <b-field label="Kierunek zmian">
-              <b-field>
-                  <b-radio-button v-model="factorData.change" :native-value="-1" type="is-danger">
-                    Spadek
-                  </b-radio-button>
-                  <b-radio-button v-model="factorData.change" :native-value="0" type="is-info">
-                    Stabilizacja
-                  </b-radio-button>
-                  <b-radio-button v-model="factorData.change" :native-value="1" type="is-success">
-                    Wzrost
-                  </b-radio-button>
-              </b-field>
+            <b-field label="Sfera">
+              <b-select v-model="factorData.domain">
+                <option
+                  v-for="(domain, ID) in domains"
+                  :value="ID"
+                  :key="`factor-domain-${ID}`"
+                >{{ domain.name }}</option>
+              </b-select>
             </b-field>
 
-            <b-field label="Wpływ">
-              <b-numberinput
-                icon-pack="material-icons-outlined"
-                min="-10"
-                max="10"
-                v-model="factorData.influence"
-              />
-            </b-field>
+            <div
+              v-for="(scenario, ID) in scenarios"
+              :key="`factor-scenarion-${ID}`"
+              class="content"
+            >
+              <p class="title is-5">Scenariusz: {{ scenario.name }}</p>
+
+              <b-field label="Kierunek zmian">
+                <b-field>
+                  <b-radio-button
+                    v-model="factorData.effect[ID].change"
+                    :native-value="-1"
+                    type="is-danger"
+                  >Spadek</b-radio-button>
+                  <b-radio-button
+                    v-model="factorData.effect[ID].change"
+                    :native-value="0"
+                    type="is-info"
+                  >Stabilizacja</b-radio-button>
+                  <b-radio-button
+                    v-model="factorData.effect[ID].change"
+                    :native-value="1"
+                    type="is-success"
+                  >Wzrost</b-radio-button>
+                </b-field>
+              </b-field>
+
+              <b-field label="Wpływ" style="max-width: 260px;">
+                <b-numberinput
+                  icon-pack="material-icons-outlined"
+                  min="-10"
+                  max="10"
+                  v-model="factorData.effect[ID].influence"
+                />
+              </b-field>
+            </div>
           </p>
+
           <p class="buttons is-right">
-            <button class="button" @click="cancelModal">
-              Anuluj
-            </button>
-            <button class="button is-success" @click="submitModal">
-              {{ domainName ? 'Dodaj' : 'Zapisz' }}
-            </button>
+            <button class="button" @click="cancelModal">Anuluj</button>
+            <button
+              class="button is-success"
+              @click="submitModal"
+            >{{ domainName ? 'Dodaj' : 'Zapisz' }}</button>
           </p>
         </div>
       </div>
@@ -60,19 +87,53 @@ export default {
     },
   },
   data: () => ({
-    isModalActive: true,
+    isModalActive: false,
     factorData: {
       domain: 0,
       name: '',
-      change: 0,
-      influence: 0,
+      effect: {},
     },
   }),
+  computed: {
+    domains() {
+      return this.$store.state.domains;
+    },
+    scenarios() {
+      return this.$store.state.scenarios;
+    },
+  },
   created() {
     this.factorData = {
       ...this.factorData,
       ...this.factor,
     };
+
+    Object.keys(this.scenarios).forEach((scenarioID) => {
+      if (scenarioID in this.factorData.effect) {
+        return;
+      }
+
+      this.factorData.effect = {
+        ...this.factorData.effect,
+        [scenarioID]: {
+          change: 0,
+          influence: 0,
+        },
+      };
+    });
+
+    if (this.factorData.domain in this.domains) return;
+
+    const domainIDs = Object.keys(this.domains);
+
+    if (domainIDs.length > 0) {
+      [this.factorData.domain] = domainIDs;
+    } else {
+      this.factorData.domain = 0;
+    }
+  },
+  mounted() {
+    this.isModalActive = true;
   },
   methods: {
     cancelModal() {
@@ -83,8 +144,14 @@ export default {
     },
   },
   watch: {
-    isModalActive() {
-      this.$emit('cancel');
+    isModalActive(value) {
+      if (!value) this.$emit('cancel');
+    },
+    factor: {
+      deep: true,
+      handler(value) {
+        console.log(value);
+      },
     },
   },
 };
@@ -93,11 +160,11 @@ export default {
 <style lang="scss">
 .material-icons-outlined {
   &.plus::after {
-    content: 'add';
+    content: "add";
   }
 
   &.minus::after {
-    content: 'remove';
+    content: "remove";
   }
 }
 </style>

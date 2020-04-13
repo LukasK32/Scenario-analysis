@@ -1,11 +1,11 @@
 <template>
-  <div class="card" v-if="domain !== null">
+  <div class="card" v-if="scenario !== null">
     <div class="card-content">
       <div class="media columns is-vcentered">
 
         <div class="column is-8">
           <p class="title is-5">
-            {{ domain.name }}
+            {{ scenario.name }}
           </p>
         </div>
 
@@ -27,10 +27,10 @@ export default {
     },
   },
   computed: {
-    domain() {
-      const { domains } = this.$store.state;
+    scenario() {
+      const { scenarios } = this.$store.state;
 
-      if (this.ID in domains) return domains[this.ID];
+      if (this.ID in scenarios) return scenarios[this.ID];
 
       return null;
     },
@@ -38,11 +38,11 @@ export default {
   methods: {
     edit() {
       this.$buefy.dialog.prompt({
-        message: `Podaj nową nazwę dla sfery <strong>${this.domain.name}</strong>:`,
+        message: `Podaj nową nazwę dla scenariusza <strong>${this.scenario.name}</strong>:`,
         inputAttrs: {
-          placeholder: 'np. Ekonomiczna',
+          placeholder: 'np. Optymistyczny',
           maxlength: 50,
-          value: this.domain.name,
+          value: this.scenario.name,
         },
         cancelText: 'Anuluj',
         confirmText: 'Zapisz',
@@ -51,22 +51,22 @@ export default {
       });
     },
     update(name) {
-      if (name === null || name === '' || name === this.domain.name) return;
+      if (name === null || name === '' || name === this.scenario.name) return;
 
-      this.$store.commit('updateDomain', {
+      this.$store.commit('updateScenario', {
         ID: this.ID,
-        domain: {
+        scenario: {
           name,
         },
       });
     },
     destroy() {
       this.$buefy.dialog.confirm({
-        message: `Czy napewno chcesz usunąć sferę <strong>${this.domain.name}</strong>?`,
+        message: `Czy napewno chcesz usunąć scenariusz <strong>${this.scenario.name}</strong>?`,
         cancelText: 'Anuluj',
         confirmText: 'Usuń',
         type: 'is-danger',
-        onConfirm: () => this.$store.dispatch('destroyDomain', this.ID),
+        onConfirm: () => this.$store.dispatch('destroyScenario', this.ID),
       });
     },
   },

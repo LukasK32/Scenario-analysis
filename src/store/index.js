@@ -7,27 +7,15 @@ const cleanState = {
   loaded: false,
   name: 'Bez tytułu',
   indexes: {
-    domains: 2,
-    factors: 3,
+    domains: 1,
+    factors: 1,
+    scenarios: 1,
+  },
+  scenarios: {
   },
   domains: {
-    1: {
-      name: 'Ekonomiczna',
-    },
   },
   factors: {
-    1: {
-      domain: '1',
-      name: 'kurs złotego',
-      change: 1,
-      influence: 3,
-    },
-    2: {
-      domain: '1',
-      name: 'stopa bezrobocia',
-      change: -1,
-      influence: -2,
-    },
   },
 };
 
@@ -36,6 +24,41 @@ export default new Vuex.Store({
     ...cleanState,
   },
   mutations: {
+    // |----------------------------------------------
+    // |  Scenarios
+    // |----------------------------------------------
+    storeScenario(state, scenario) {
+      const ID = state.indexes.scenarios;
+      state.indexes.scenarios += 1;
+
+      state.scenarios = {
+        ...state.scenarios,
+        [ID]: {
+          name: 'Scenariusz bez nazwy',
+          ...scenario,
+        },
+      };
+    },
+    updateScenario(state, { ID, scenario }) {
+      const { scenarios } = state;
+
+      if (ID in scenarios) {
+        scenarios[ID] = {
+          ...scenarios[ID],
+          ...scenario,
+        };
+      }
+    },
+    destroyScenario(state, ID) {
+      const { scenarios } = state;
+
+      if (ID in scenarios) {
+        Vue.delete(scenarios, ID);
+      }
+    },
+    // |----------------------------------------------
+    // |  Domains
+    // |----------------------------------------------
     storeDomain(state, domain) {
       const ID = state.indexes.domains;
       state.indexes.domains += 1;
@@ -49,7 +72,7 @@ export default new Vuex.Store({
       };
     },
     updateDomain(state, { ID, domain }) {
-      const { domains } = this.state;
+      const { domains } = state;
 
       if (ID in domains) {
         domains[ID] = {
@@ -57,25 +80,17 @@ export default new Vuex.Store({
           ...domain,
         };
       }
-
-      state.domains = this.state.domains;
     },
     destroyDomain(state, ID) {
-      const { domains, factors } = state;
+      const { domains } = state;
 
       if (ID in domains) {
-        Object.keys(factors).forEach((factorID) => {
-          if (factors[factorID].domain === ID) {
-            Vue.delete(factors, factorID);
-          }
-        });
-
         Vue.delete(domains, ID);
       }
-
-      state.domains = domains;
-      state.factors = factors;
     },
+    // |----------------------------------------------
+    // |  Factors
+    // |----------------------------------------------
     storeFactor(state, factor) {
       const ID = state.indexes.factors;
       state.indexes.factors += 1;
@@ -99,8 +114,6 @@ export default new Vuex.Store({
           ...factor,
         };
       }
-
-      state.factors = this.state.factors;
     },
     destroyFactor(state, ID) {
       const { factors } = state;
@@ -108,14 +121,18 @@ export default new Vuex.Store({
       if (ID in factors) {
         Vue.delete(factors, ID);
       }
-
-      state.factors = factors;
     },
+    // |----------------------------------------------
+    // |  Project
+    // |----------------------------------------------
     loadProject(state, project = cleanState) {
       Object.assign(state, cleanState, project, {
         loaded: true,
       });
     },
+    // |----------------------------------------------
+    // |  Project name
+    // |----------------------------------------------
     updateProjectName(state, name) {
       // trim() results in weird behaviour in v-text-field
       // state.project.name = name.trim();
@@ -124,6 +141,17 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    destroyScenario({ commit }, ID) {
+      // TODO: Destroy data from factors
+      commit('destroyScenario', ID);
+    },
+    destroyDomain({ commit }, ID) {
+      // TODO: Destroy factors
+      commit('destroyDomain', ID);
+    },
+    destroyFactor({ commit }, ID) {
+      commit('destroyFactor', ID);
+    },
   },
   modules: {
   },
