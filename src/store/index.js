@@ -7,11 +7,26 @@ const cleanState = {
   loaded: false,
   name: 'Bez tytułu',
   indexes: {
-    domains: 1,
-    factors: 1,
+    domains: 2,
+    factors: 3,
   },
-  domains: {},
-  factors: {},
+  domains: {
+    1: {
+      name: 'Ekonomiczna',
+    },
+  },
+  factors: {
+    1: {
+      domain: '1',
+      name: 'kurs złotego',
+      influence: 3,
+    },
+    2: {
+      domain: '1',
+      name: 'stopa bezrobocia',
+      influence: -2,
+    },
+  },
 };
 
 export default new Vuex.Store({
