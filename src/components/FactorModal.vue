@@ -12,6 +12,20 @@
               <b-input type="text" v-model="factorData.name" />
             </b-field>
 
+            <b-field label="Kierunek zmian">
+              <b-field>
+                  <b-radio-button v-model="factorData.change" :native-value="-1" type="is-danger">
+                    Spadek
+                  </b-radio-button>
+                  <b-radio-button v-model="factorData.change" :native-value="0" type="is-info">
+                    Stabilizacja
+                  </b-radio-button>
+                  <b-radio-button v-model="factorData.change" :native-value="1" type="is-success">
+                    Wzrost
+                  </b-radio-button>
+              </b-field>
+            </b-field>
+
             <b-field label="Wpływ">
               <b-numberinput
                 icon-pack="material-icons-outlined"
@@ -50,6 +64,7 @@ export default {
     factorData: {
       domain: 0,
       name: '',
+      change: 0,
       influence: 0,
     },
   }),
