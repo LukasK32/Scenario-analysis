@@ -90,7 +90,7 @@ export default {
         confirmText: 'Usuń',
         type: 'is-danger',
         onConfirm: () => {
-          this.$store.commit('destroyFactor', this.ID);
+          this.$store.dispatch('destroyFactor', this.ID);
         },
       });
     },
