@@ -19,11 +19,13 @@ const cleanState = {
     1: {
       domain: '1',
       name: 'kurs złotego',
+      change: 1,
       influence: 3,
     },
     2: {
       domain: '1',
       name: 'stopa bezrobocia',
+      change: -1,
       influence: -2,
     },
   },
