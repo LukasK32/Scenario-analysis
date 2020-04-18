@@ -147,12 +147,6 @@ export default {
     isModalActive(value) {
       if (!value) this.$emit('cancel');
     },
-    factor: {
-      deep: true,
-      handler(value) {
-        console.log(value);
-      },
-    },
   },
 };
 </script>
