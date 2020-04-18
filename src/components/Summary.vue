@@ -15,8 +15,26 @@
           <tr v-for="(factor, m) in factors" :key="`table-${n}-${domain}-${m}`">
             <th v-if="m == 0" :rowspan="factors.length">{{ domain }}</th>
             <td>{{ factor.name }}</td>
-            <td>{{ factor.change }}</td>
-            <td>{{ factor.influence }}</td>
+            <td>
+              <template v-if="factor.change < 0">
+                <span class="material-icons">trending_down</span>
+                <br>
+                Spadek
+              </template>
+              <template v-if="factor.change == 0">
+                <span class="material-icons">trending_flat</span>
+                <br>
+                Stabilizacja
+              </template>
+              <template v-if="factor.change > 0">
+                <span class="material-icons">trending_up</span>
+                <br>
+                Wzrost
+              </template>
+            </td>
+            <td class="influence" :class="{'red': factor.influence < 0, 'green': factor.influence > 0}">
+              {{ factor.influence }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -69,6 +87,23 @@ table.table {
     text-align: center;
     vertical-align: middle;
     padding: 0.5em 0.5em;
+
+    .material-icons {
+      vertical-align: bottom;
+    }
+
+    &.influence {
+      font-weight: bold;
+      font-size: 1.3em;
+    }
+
+    &.red {
+      color: #F44336;
+    }
+
+    &.green {
+      color: #4CAF50;
+    }
   }
 }
 </style>
