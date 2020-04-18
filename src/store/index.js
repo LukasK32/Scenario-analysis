@@ -125,7 +125,7 @@ export default new Vuex.Store({
     // |----------------------------------------------
     // |  Project
     // |----------------------------------------------
-    loadProject(state, project = cleanState) {
+    loadProject(state, project = null) {
       Object.assign(state, cleanState, project, {
         loaded: true,
       });
@@ -151,6 +151,31 @@ export default new Vuex.Store({
     },
     destroyFactor({ commit }, ID) {
       commit('destroyFactor', ID);
+    },
+    loadProject({ commit }, project = null) {
+      if (project === null) {
+        commit('loadProject', cleanState);
+
+        // Default scenarios
+        commit('storeScenario', {
+          name: 'Optymistyczny',
+        });
+
+        commit('storeScenario', {
+          name: 'Pesymistyczny',
+        });
+
+        // Default domains
+        commit('storeDomain', {
+          name: 'Ekonomiczna',
+        });
+
+        commit('storeDomain', {
+          name: 'Technologiczna',
+        });
+      } else {
+        commit('loadProject', project);
+      }
     },
   },
   modules: {

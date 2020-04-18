@@ -37,7 +37,7 @@ export default {
       if (this.isLoading) { return; }
       this.isLoading = true;
 
-      this.$store.commit('loadProject');
+      this.$store.dispatch('loadProject');
     },
     initProjectLoading() {
       if (this.isLoading) { return; }
@@ -62,7 +62,7 @@ export default {
 
           // 'project' object should be checked here...
 
-          await this.$store.commit('loadProject', project);
+          await this.$store.dispatch('loadProject', project);
         } catch (err) {
           throw new Error('Nie udało się odczytać danych z pliku');
         }
