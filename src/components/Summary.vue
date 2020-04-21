@@ -11,31 +11,35 @@
             <th>Wpływ</th>
           </tr>
         </thead>
-        <tbody v-for="(factors, domain) in table.domains" :key="`table-${n}-${domain}`">
-          <tr v-for="(factor, m) in factors" :key="`table-${n}-${domain}-${m}`">
-            <th v-if="m == 0" :rowspan="factors.length">{{ domain }}</th>
-            <td>{{ factor.name }}</td>
-            <td>
-              <template v-if="factor.change < 0">
-                <span class="material-icons">trending_down</span>
-                <br>
-                Spadek
-              </template>
-              <template v-if="factor.change == 0">
-                <span class="material-icons">trending_flat</span>
-                <br>
-                Stabilizacja
-              </template>
-              <template v-if="factor.change > 0">
-                <span class="material-icons">trending_up</span>
-                <br>
-                Wzrost
-              </template>
-            </td>
-            <td class="influence" :class="{'red': factor.influence < 0, 'green': factor.influence > 0}">
-              {{ factor.influence }}
-            </td>
-          </tr>
+        <tbody>
+          <template v-for="(factors, domain) in table.domains">
+
+            <tr v-for="(factor, m) in factors" :key="`table-${n}-${domain}-${m}`">
+              <th v-if="m == 0" :rowspan="factors.length">{{ domain }}</th>
+              <td>{{ factor.name }}</td>
+              <td>
+                <template v-if="factor.change < 0">
+                  <span class="material-icons">trending_down</span>
+                  <br>
+                  Spadek
+                </template>
+                <template v-if="factor.change == 0">
+                  <span class="material-icons">trending_flat</span>
+                  <br>
+                  Stabilizacja
+                </template>
+                <template v-if="factor.change > 0">
+                  <span class="material-icons">trending_up</span>
+                  <br>
+                  Wzrost
+                </template>
+              </td>
+              <td class="influence" :class="{'red': factor.influence < 0, 'green': factor.influence > 0}">
+                {{ factor.influence }}
+              </td>
+            </tr>
+
+          </template>
         </tbody>
       </table>
     </div>
